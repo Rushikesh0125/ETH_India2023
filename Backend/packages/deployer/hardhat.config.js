@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 require("@nomicfoundation/hardhat-toolbox");
 require("@nomicfoundation/hardhat-ethers");
-require("@nomiclabs/hardhat-ethers");
 const config_1 = require("hardhat/config");
 require("dotenv/config");
 const alchemy_web3_1 = require("@alch/alchemy-web3");

@@ -18,7 +18,7 @@ interface CrossChainErrors {
     error ErrorApprovingZeta();
 }
 
-contract CrossChainNFTZ is 
+contract CrossChainNFTMintableZ is 
     ERC721Enumerable, 
     ERC721URIStorage,  
     Ownable,

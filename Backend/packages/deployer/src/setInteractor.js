@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ethers_1 = require("ethers");
 const getABI_1 = require("./utils/getABI");
 const getProviderURL_1 = require("./utils/getProviderURL");
-const setAllowList = async (contractName, contractAddresses, chains) => {
+const setInteractor = async (contractName, contractAddresses, chains) => {
     const data = (0, getABI_1.getABI)(contractName);
     for (let i = 0; i < chains.length; i++) {
         const provider = new ethers_1.ethers.providers.JsonRpcProvider((0, getProviderURL_1.getProviderURLs)(chains[i]));
@@ -12,10 +12,8 @@ const setAllowList = async (contractName, contractAddresses, chains) => {
         for (let j = 0; j < chains.length; j++) {
             if (i == j)
                 continue;
-            const tx1 = await contractInst.allowlistSourceChain(chains[j], true);
+            const tx1 = await contractInst.setInteractorByChainId(chains[j] == "goerli" ? 5 : chains[j] == "mumbai" ? 80001 : 97, true);
             tx1.wait();
-            const tx2 = await contractInst.allowlistDestinationChain(chains[j], true);
-            tx2.wait();
         }
     }
 };

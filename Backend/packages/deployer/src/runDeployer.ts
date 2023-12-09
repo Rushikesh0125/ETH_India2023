@@ -9,6 +9,7 @@ import { FormData } from "./types/FormData";
 import { ABI } from "./ABI/Create3ABI";
 import { getABI } from "./utils/getABI";
 import { getProviderURLs } from "./utils/getProviderURL";
+import { verifyContract } from "./verifyContract";
 import * as fs from "node:fs";
 
 export const runDeployer = async (clientData: FormData) => {
@@ -35,14 +36,6 @@ export const runDeployer = async (clientData: FormData) => {
 
     const contractName =
       getContractName(clientData.type, protocolType, data) || "";
-
-    const deployerAddress = "0x6513Aedb4D1593BA12e50644401D976aebDc90d8";
-    //const { abi, bytecode } = await hre.artifacts.readArtifact("Create3Deployer");
-    const deployerContract = new ethers.Contract(
-      deployerAddress,
-      ABI,
-      new ethers.Wallet(process.env.PRIVATE_KEY || "", provider)
-    );
 
     const argType = () => {
       if (clientData.type == "ERC20") {
@@ -97,24 +90,9 @@ export const runDeployer = async (clientData: FormData) => {
       wallet
     );
 
-    const salt = ethers.utils.hexZeroPad(toUtf8Bytes("100"), 32);
+    const tx = await contractToDeployFactory.deploy(...constructorArguments);
 
-    const abiCoder = ethers.utils.defaultAbiCoder;
-
-    const creationCode = ethers.utils.solidityPack(
-      ["bytes", "bytes"],
-      [
-        contractToDeployFactory.bytecode,
-        abiCoder.encode(argType(), constructorArguments),
-      ]
-    );
-
-    const deployedAddress = await deployerContract.callStatic.deploy(
-      creationCode,
-      salt
-    );
-
-    deployedAddressArray[i] = deployedAddress;
+    deployedAddressArray[i] = tx.address;
   }
 
   return deployedAddressArray;

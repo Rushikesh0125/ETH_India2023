@@ -16,7 +16,7 @@ interface CrossChainErrors {
     error ErrorApprovingZeta();
 }
 
-contract CrossChainTokenZ is ERC20, Ownable, ZetaInteractor, ZetaReceiver, CrossChainErrors {
+contract CrossChainTokenMintableZ is ERC20, Ownable, ZetaInteractor, ZetaReceiver, CrossChainErrors {
 
     bytes32 private CROSS_CHAIN_TRANSFER_MESSAGE;
     bytes32 private CROSS_CHAIN_MINT_MESSAGE;

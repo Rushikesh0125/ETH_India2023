@@ -1,22 +1,26 @@
+import { ethers } from "ethers";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 
 export const verifyContract = async (
   contractName: string,
   contractAddress: string,
   contractArgs: any[],
-  chains: string[],
+  chain: string,
   hre: HardhatRuntimeEnvironment
 ) => {
-  for (let i = 0; i < chains.length; i++) {
-    console.log(`getting ready to verify on ${chains[i]}`);
-    const dir = getDir(contractName);
-    await hre.run("verify:verify", {
-      network: chains[i],
-      address: contractAddress,
-      contract: `${dir}/${contractName}.sol:${contractName}`,
-      contractArgs,
-    });
+  console.log(`getting ready to verify on ${chain}`);
+  let dir = getDir(contractName);
+  if (contractName.charAt(contractName.length - 1) == "Z") {
+    dir = dir + `/Zetachain/${contractName}Z.sol:${contractName}`;
+  } else {
+    dir = dir + `/CCIP/${contractName}.sol:${contractName}`;
   }
+  await hre.run("verify:verify", {
+    network: chain,
+    address: contractAddress,
+    contract: dir,
+    contractArgs,
+  });
 };
 
 const getDir = (contractName: string) => {

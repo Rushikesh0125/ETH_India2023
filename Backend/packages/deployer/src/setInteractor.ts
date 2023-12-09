@@ -2,7 +2,7 @@ import { Wallet, ethers } from "ethers";
 import { getABI } from "./utils/getABI";
 import { getProviderURLs } from "./utils/getProviderURL";
 
-const setAllowList = async (
+const setInteractor = async (
   contractName: string,
   contractAddresses: string[],
   chains: string[]
@@ -21,13 +21,12 @@ const setAllowList = async (
     );
     for (let j = 0; j < chains.length; j++) {
       if (i == j) continue;
-      const tx1 = await contractInst.allowlistSourceChain(chains[j], true);
+      const tx1 = await contractInst.setInteractorByChainId(
+        chains[j] == "goerli" ? 5 : chains[j] == "mumbai" ? 80001 : 97,
+        true
+      );
 
       tx1.wait();
-
-      const tx2 = await contractInst.allowlistDestinationChain(chains[j], true);
-
-      tx2.wait();
     }
   }
 };

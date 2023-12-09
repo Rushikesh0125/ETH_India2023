@@ -19,7 +19,7 @@ interface CrossChainErrors {
     error ErrorApprovingZeta();
 }
 
-contract CrossChainNFTZ is 
+contract CrossChainNFTNoRolesZ is 
     ERC721Enumerable, 
     ERC721URIStorage, 
     ERC721Burnable, 
