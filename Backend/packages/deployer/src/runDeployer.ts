@@ -1,128 +1,26 @@
 import { Signer } from "ethers";
-import { deployContract } from "./deployContract";
-import { getContractArgs } from "./utils/getContractArgs";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { ParamType, toUtf8Bytes } from "ethers/lib/utils";
-
-type featureType = {
-  mintable: boolean;
-  burnable: boolean;
-  pausable: boolean;
-  upradable: boolean;
-};
-
-type userArgsType = {
-  minter?: string;
-  name: string;
-  symbol: string;
-  uri?: string;
-  supply?: string;
-  chainId?: string;
-  seed?: string;
-  tokenFetures: featureType;
-};
-
-const inputTypeERC721Z: readonly string[] = [
-  "address",
-  "address",
-  "address",
-  "address",
-  "string",
-  "string",
-  "string",
-  "uint256",
-  "uint256",
-  "uint256",
-  "uint256",
-];
-
-const inputTypeERC721ZNR: readonly string[] = [
-  "address",
-  "address",
-  "address",
-  "string",
-  "string",
-  "string",
-  "uint256",
-  "uint256",
-  "uint256",
-  "uint256",
-];
-
-const inputTypeERC721: readonly string[] = [
-  "address",
-  "address",
-  "string",
-  "string",
-  "string",
-  "uint256",
-  "uint256",
-  "uint256",
-  "uint256",
-];
-
-const inputTypeERC721NR: readonly string[] = [
-  "address",
-  "address",
-  "string",
-  "string",
-  "string",
-  "uint256",
-  "uint256",
-  "uint256",
-  "uint256",
-];
-
-const inputTypeERC20: readonly string[] = [
-  "address",
-  "address",
-  "string",
-  "string",
-];
-const inputTypeERC20NR: readonly string[] = ["address", "string", "string"];
-const inputTypeERC20Z: readonly string[] = [
-  "address",
-  "address",
-  "address",
-  "address",
-  "string",
-  "string",
-];
-const inputTypeERC20ZNR: readonly string[] = [
-  "address",
-  "address",
-  "address",
-  "string",
-  "string",
-];
-
-type formData = {
-  type: string;
-  tokenName: string;
-  tokenSymbol: string;
-  tokenSupply: string;
-  tokenDecimals: string;
-  tokenFeatures: featureType;
-  tokenChains: string[]; // Assuming tokenChains is an array of strings, you can adjust this based on the actual type.
-  supportedChain: string;
-  uri?: string;
-};
+import { UserArgsType } from "./types/userArgsType";
+import { getReqArgs } from "./utils/getReqArgs";
+import { getContractName } from "./utils/getContractName";
+import { InputTypes } from "./types/inputTypes";
+import { FormData } from "./types/FormData";
 
 export const runDeployer = async (
-  clientData: formData,
+  clientData: FormData,
   hre: HardhatRuntimeEnvironment,
   signer: Signer
 ) => {
   const protocolType =
     clientData.supportedChain == "zetachain" ? "zetachain" : "CCIP";
 
-  const data: userArgsType = {
+  const data: UserArgsType = {
     minter: "",
     name: clientData.tokenName,
     symbol: clientData.tokenSymbol,
-    uri: "",
+    uri: clientData.uri,
     supply: clientData.tokenSupply,
-    chainId: clientData.uri,
     tokenFetures: clientData.tokenFeatures,
   };
 
@@ -146,29 +44,29 @@ export const runDeployer = async (
     if (clientData.type == "ERC20") {
       if (contractName.charAt(-5) == "Z") {
         if (contractName.includes("NoRoles")) {
-          return inputTypeERC20ZNR;
+          return InputTypes.inputTypeERC20ZNR;
         } else {
-          return inputTypeERC20Z;
+          return InputTypes.inputTypeERC20Z;
         }
       } else {
         if (contractName.includes("NoRoles")) {
-          return inputTypeERC20NR;
+          return InputTypes.inputTypeERC20NR;
         } else {
-          return inputTypeERC20;
+          return InputTypes.inputTypeERC20;
         }
       }
     } else if (clientData.type == "ERC721") {
       if (contractName.charAt(-5) == "Z") {
         if (contractName.includes("NoRoles")) {
-          return inputTypeERC721ZNR;
+          return InputTypes.inputTypeERC721ZNR;
         } else {
-          return inputTypeERC721Z;
+          return InputTypes.inputTypeERC721Z;
         }
       } else {
         if (contractName.includes("NoRoles")) {
-          return inputTypeERC721NR;
+          return InputTypes.inputTypeERC721NR;
         } else {
-          return inputTypeERC721;
+          return InputTypes.inputTypeERC721;
         }
       }
     }
@@ -178,12 +76,16 @@ export const runDeployer = async (
 
   let deployedAddressArray = [];
 
+  let seed = 1;
+
   for (let i = 0; i < chainsToBeDeployedOn.length; i++) {
-    const constructorArguments: readonly any[] = await getReqArgs(
+    let constructorArguments: readonly any[] = await getReqArgs(
       contractName,
       chainsToBeDeployedOn[i],
-      data
+      data,
+      [chainsToBeDeployedOn[i], seed, chainsToBeDeployedOn.length]
     );
+    seed++;
 
     const { abi, bytecode } = await hre.artifacts.readArtifact(contractName);
 
@@ -205,94 +107,4 @@ export const runDeployer = async (
   }
 
   return deployedAddressArray;
-};
-
-const getReqArgs = async (
-  contractName: string,
-  netWork: string,
-  userArgs: userArgsType
-) => {
-  const intialArgs: any[] = await getContractArgs(contractName, netWork);
-  let args: readonly any[] = [];
-  if (contractName.includes("NFT")) {
-    if (contractName.includes("NoRoles")) {
-      args = [
-        ...intialArgs,
-        userArgs.name,
-        userArgs.symbol,
-        userArgs.uri,
-        userArgs.supply,
-        userArgs.chainId,
-        userArgs.seed,
-        3,
-      ];
-    } else {
-      args = [
-        ...intialArgs,
-        userArgs.minter,
-        userArgs.name,
-        userArgs.symbol,
-        userArgs.uri,
-        userArgs.supply,
-        userArgs.chainId,
-        userArgs.seed,
-        3,
-      ];
-    }
-  } else if (contractName.includes("Token")) {
-    if (contractName.includes("NoRoles")) {
-      args = [...intialArgs, userArgs.minter, userArgs.name, userArgs.symbol];
-    } else {
-      args = [...intialArgs, userArgs.name, userArgs.symbol];
-    }
-  }
-  return args;
-};
-
-const getContractName = (
-  Type: string,
-  protocol: string,
-  clientData: userArgsType
-) => {
-  if (Type == "ERC20") {
-    if (clientData.tokenFetures.mintable && clientData.tokenFetures.burnable) {
-      if (protocol == "zetachain") {
-        return "CrossChainTokenZ.sol";
-      } else {
-        return "CrossChainToken.sol";
-      }
-    } else if (clientData.tokenFetures.burnable) {
-      if (protocol == "zetachain") {
-        return "CrossChainTokenBurnableZ.sol";
-      } else {
-        return "CrossChainTokenBurnable.sol";
-      }
-    } else if (clientData.tokenFetures.mintable) {
-      if (protocol == "zetachain") {
-        return "CrossChainTokenMintableZ.sol";
-      } else {
-        return "CrossChainTokenMintable.sol";
-      }
-    }
-  } else if (Type == "ERC721") {
-    if (clientData.tokenFetures.mintable && clientData.tokenFetures.burnable) {
-      if (protocol == "zetachain") {
-        return "CrossChainNFTZ.sol";
-      } else {
-        return "CrossChainNFT.sol";
-      }
-    } else if (clientData.tokenFetures.burnable) {
-      if (protocol == "zetachain") {
-        return "CrossChainNFTBurnableZ.sol";
-      } else {
-        return "CrossChainNFTBurnable.sol";
-      }
-    } else if (clientData.tokenFetures.mintable) {
-      if (protocol == "zetachain") {
-        return "CrossChainNFTMintableZ.sol";
-      } else {
-        return "CrossChainNFTMintable.sol";
-      }
-    }
-  }
 };
