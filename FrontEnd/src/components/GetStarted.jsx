@@ -3,6 +3,7 @@ import { Context } from "../context/Context";
 import ERC721_details from "./ERC721_details";
 import ERC20_details from "./ERC20_details";
 import clsx from "clsx";
+import { Link } from "react-router-dom";
 
 const GetStarted = () => {
   const contracts = [
@@ -31,9 +32,10 @@ const GetStarted = () => {
             };
 
             const common =
-              "text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 bg-blue-600";
+              "text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-900 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 bg-blue-600";
             const className = clsx(common, {
-              "bg-blue-900": contract_details_open == el.card,
+              "bg-blue-800 ring-4 outline-none ring-blue-900":
+                contract_details_open == el.card,
               "bg-blue-500": contract_details_open != el.card,
             });
 
@@ -52,13 +54,12 @@ const GetStarted = () => {
           })}
         </div>
         <div className="contracts_detals">
-          <div id="ERC721">
-            {contract_details_open == "ERC721" && <ERC721_details />}
-          </div>
-          <div id="ERC20">
-            {contract_details_open == "ERC20" && <ERC20_details />}
-          </div>
+          {contract_details_open && (
+            <ERC20_details type={contract_details_open} />
+          )}
         </div>
+
+         <Link to="/contract">contract</Link>
       </div>
     </div>
   );

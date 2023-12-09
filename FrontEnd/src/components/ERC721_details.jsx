@@ -1,4 +1,5 @@
 import { useReducer } from "react";
+import Button from "./Button";
 
 const initialFormState = {
   nftName: "",
@@ -97,12 +98,12 @@ const ERC721_details = () => {
   return (
     <form
       onSubmit={onSubmit}
-      className="bg-[grey] flex flex-col gap-[20px] p-[30px]"
+      className=" bg-gray-300 flex flex-col gap-[20px] p-[30px]"
     >
       <h1 className="p-[30px] py-[0px] font-semibold text-[23px]">
         Enter NFT details
       </h1>
-      <div className="bg-[grey] flex gap-[20px] p-[30px]">
+      <div className="  flex gap-[20px] p-[30px]">
         <div className="flex flex-col gap-[10px]">
           <label htmlFor="nftName" className="font-semibold text-[16px]">
             Enter token name
@@ -164,9 +165,9 @@ const ERC721_details = () => {
           />
         </div>
       </div>
-      <div className="bg-[grey] flex flex-col gap-[20px] p-[30px] pt-[0px]">
+      <div className="  flex flex-col gap-[20px] p-[30px] pt-[0px]">
         <h1 className="font-semibold text-left text-[17px]">Features</h1>
-        <div className="bg-[grey] flex gap-[20px] font-semibold">
+        <div className="  flex gap-[20px] font-semibold">
           <div className="check_boxm">
             <label>
               <input
@@ -217,9 +218,9 @@ const ERC721_details = () => {
           </div>
         </div>
       </div>
-      <div className="bg-[grey] flex flex-col gap-[20px] p-[30px] pt-[0px]">
+      <div className="  flex flex-col gap-[20px] p-[30px] pt-[0px]">
         <h1 className="font-semibold text-left text-[17px]">Select Chains</h1>
-        <div className="bg-[grey] flex gap-[20px] font-semibold">
+        <div className="  flex gap-[20px] font-semibold">
           <div className="check_boxsep">
             <label>
               <input
@@ -282,12 +283,11 @@ const ERC721_details = () => {
           <option value="lz">Layer 0</option>
         </select>
       </div> */}
-      <button
+    <Button
         type="submit"
-        className="w-max rounded-[10px] bg-blue-600 ml-[30px] p-[10px] font-semibold"
-      >
-        Deploy
-      </button>
+        >
+          Deploy
+        </Button>
     </form>
   );
 };
