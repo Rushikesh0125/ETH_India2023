@@ -1,4 +1,4 @@
-import { Signer } from "ethers";
+import { Signer, ethers } from "ethers";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { ParamType, toUtf8Bytes } from "ethers/lib/utils";
 import { UserArgsType } from "./types/userArgsType";
@@ -6,12 +6,10 @@ import { getReqArgs } from "./utils/getReqArgs";
 import { getContractName } from "./utils/getContractName";
 import { InputTypes } from "./types/inputTypes";
 import { FormData } from "./types/FormData";
+import { ABI } from "./ABI/Create3ABI";
+import { getABI } from "./utils/getABI";
 
-export const runDeployer = async (
-  clientData: FormData,
-  hre: HardhatRuntimeEnvironment,
-  signer: Signer
-) => {
+export const runDeployer = async (clientData: FormData) => {
   const protocolType =
     clientData.supportedChain == "zetachain" ? "zetachain" : "CCIP";
 
@@ -30,15 +28,18 @@ export const runDeployer = async (
   const chainsToBeDeployedOn = clientData.tokenChains;
 
   const deployerAddress = "0x6513Aedb4D1593BA12e50644401D976aebDc90d8";
-  const { abi, bytecode } = await hre.artifacts.readArtifact("Create3Deployer");
-  const deployerAbi = abi;
-  const deployerBytecode = bytecode;
+  //const { abi, bytecode } = await hre.artifacts.readArtifact("Create3Deployer");
+  const deployerContract = new ethers.Contract(deployerAddress, ABI);
+  // const deployerAbi = abi;
+  // const deployerBytecode = bytecode;
 
-  const deployerContract = new hre.ethers.Contract(
-    deployerAddress,
-    deployerAbi,
-    signer
-  );
+  // const deployerContract = new hre.ethers.Contract(
+  //   deployerAddress,
+  //   deployerAbi,
+  //   signer
+  // );
+
+  const instance = deployerContract.attach(deployerAddress);
 
   const argType = () => {
     if (clientData.type == "ERC20") {
@@ -87,18 +88,26 @@ export const runDeployer = async (
     );
     seed++;
 
-    const { abi, bytecode } = await hre.artifacts.readArtifact(contractName);
+    //const { abi, bytecode } = await hre.artifacts.readArtifact(contractName);
 
-    const salt = hre.ethers.utils.hexZeroPad(toUtf8Bytes("100"), 32);
-
-    const abiCoder = hre.ethers.utils.defaultAbiCoder;
-
-    const creationCode = hre.ethers.utils.solidityPack(
-      ["bytes", "bytes"],
-      [bytecode, abiCoder.encode(argType(), constructorArguments)]
+    const contractToDeployFactory = new ethers.ContractFactory(
+      contractName,
+      getABI(contractName)
     );
 
-    const deployedAddress = await deployerContract.callStatic.deploy(
+    const salt = ethers.utils.hexZeroPad(toUtf8Bytes("100"), 32);
+
+    const abiCoder = ethers.utils.defaultAbiCoder;
+
+    const creationCode = ethers.utils.solidityPack(
+      ["bytes", "bytes"],
+      [
+        contractToDeployFactory.bytecode,
+        abiCoder.encode(argType(), constructorArguments),
+      ]
+    );
+
+    const deployedAddress = await instance.callStatic.deploy(
       creationCode,
       salt
     );
