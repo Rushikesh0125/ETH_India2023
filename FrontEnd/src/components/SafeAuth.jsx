@@ -147,7 +147,7 @@ function SafeAuth() {
           value: ethers.parseUnits("0.0001", "ether").toString(),
         },
       ],
-    });
+    }); 
 
     // Sign transaction. Not necessary to execute the transaction if the threshold is one
     // but kept to test the sign transaction modal

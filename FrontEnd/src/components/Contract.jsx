@@ -3,8 +3,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createClient } from "urql";
 
-
-
 const userAddress = "0x9d97cf3ac20b73c81d8a5233d9fbe09618d4f8bd";
 const goerli_query_url =
   "https://api.studio.thegraph.com/query/51610/deployer-eth-goerli/version/latest";
@@ -32,15 +30,14 @@ const mumbai_client = createClient({
   url: mumbai_query_url,
 });
 
-
 const Contract = () => {
- 
-
   const goerli = useQuery({
     queryKey: ["goerli"],
     queryFn: () => goerli_client.query(query).toPromise(),
     enabled: !!goerli_client,
     select: (data) => {
+      if(!data) return {data: []}
+
       return {
         data: data.data.deployeds
           .filter((d) => d.sender === userAddress)
@@ -59,6 +56,7 @@ const Contract = () => {
     queryFn: () => mumbai_client.query(query).toPromise(),
     enabled: !!mumbai_client,
     select: (data) => {
+      if(!data) return {data: []}
       return {
         data: data.data.deployeds
           .filter((d) => d.sender === userAddress)
@@ -77,6 +75,8 @@ const Contract = () => {
     queryFn: () => bsc_client.query(query).toPromise(),
     enabled: !!bsc_client,
     select: (data) => {
+      if(!data) return {data: []}
+
       return {
         data: data.data.deployeds
           .filter((d) => d.sender === userAddress)
@@ -114,25 +114,35 @@ const Contract = () => {
               </th>
             </tr>
           </thead>
-          <tbody className="overflow-y-scroll max-h-screen">
-            {isLoading ? (
-              <h3>Loading</h3>
-            ) : isError ? (
-              <h3>Error</h3>
-            ) : (
-              allData.map((el, i) => (
-                <tr key={i} className="bg-white border-b ">
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
-                  >
-                    {el.contractAddress}
-                  </th>
-                  <td className="px-6 py-4">{el.chain}</td>
-                </tr>
-              ))
-            )}
-          </tbody>
+          {isLoading ? (
+            <tbody>
+              <tr>
+              <th>Loading </th>
+              </tr>
+            </tbody>
+          ) : isError ? (
+            <tbody>
+             <tr>
+              <th>Error </th>
+              </tr>
+            </tbody>
+          ) : (
+            <>
+              <tbody className="overflow-y-scroll max-h-screen">
+                {allData.map((el, i) => (
+                  <tr key={i} className="bg-white border-b ">
+                    <th
+                      scope="row"
+                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
+                    >
+                      {el.contractAddress}
+                    </th>
+                    <td className="px-6 py-4">{el.chain}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </>
+          )}
         </table>
       </div>
     </main>
@@ -140,5 +150,3 @@ const Contract = () => {
 };
 
 export default Contract;
-
- 
