@@ -11,10 +11,12 @@ export const getABI = (contractName: string) => {
     contractName.charAt(contractName.length - 1) == "Z" ? "Zetachain" : "CCIP";
 
   const path = `../../artifacts/contracts/${dir}/${proto}/${contractName}.sol/${contractName}.json`;
-  let data;
-  const file = JSON.parse(fs.readFileSync(path).toString()) as fileType;
+  const dirToRead = fs.readdirSync("../../artifacts/contracts");
 
-  return file.abi;
+  const file = fs.readFileSync(path);
+  console.log("file", JSON.parse(file.toString()));
+
+  return path;
 };
 
 console.log(getABI("CrossChainNFT"));
