@@ -22,7 +22,7 @@ const State = ({ children }) => {
     bsc: false,
   });
 
-  // NFT DETAILS
+  // TOKEN DETAILS
   const [tokenName, setTokenName] = useState("");
   const [tokenSymbol, setTokenSymbol] = useState("");
   const [tokenSupply, setTokenSupply] = useState(0);
@@ -41,27 +41,27 @@ const State = ({ children }) => {
   });
 
   // CARDS DETAILS
-  const ERC20_DETAILS = "ERC20";
-  const ERC721_DETAILS = "ERC721";
-  const ERC20_CARD = "TOKEN_CARD";
-  const ERC721_CARD = "NFT_CARD";
+  // const ERC20_DETAILS = "ERC20";
+  // const ERC721_DETAILS = "ERC721";
+  // const ERC20_CARD = "TOKEN_CARD";
+  // const ERC721_CARD = "NFT_CARD";
   const [contract_details_open, setContract_details_open] = useState("");
 
   function open_erc_20() {
-    document.getElementById(ERC721_DETAILS).display = "none";
-    document.getElementById(ERC20_DETAILS).display = "block";
-    document.getElementById(ERC721_CARD).classList.add("bg-grey");
-    document.getElementById(ERC721_CARD).classList.remove("bg-rose-600");
-    document.getElementById(ERC20_CARD).classList.add("bg-rose-600");
+    // document.getElementById(ERC721_DETAILS).display = "none";
+    // document.getElementById(ERC20_DETAILS).display = "block";
+    // document.getElementById(ERC721_CARD).classList.add("bg-grey");
+    // document.getElementById(ERC721_CARD).classList.remove("bg-rose-600");
+    // document.getElementById(ERC20_CARD).classList.add("bg-rose-600");
     setContract_details_open("ERC20");
   }
 
   function open_erc_721() {
-    document.getElementById(ERC20_DETAILS).display = "none";
-    document.getElementById(ERC721_DETAILS).display = "block";
-    document.getElementById(ERC721_CARD).classList.add("bg-rose-600");
-    document.getElementById(ERC20_CARD).classList.remove("bg-rose-600");
-    document.getElementById(ERC20_CARD).classList.add("bg-grey");
+    // document.getElementById(ERC20_DETAILS).display = "none";
+    // document.getElementById(ERC721_DETAILS).display = "block";
+    // document.getElementById(ERC721_CARD).classList.add("bg-rose-600");
+    // document.getElementById(ERC20_CARD).classList.remove("bg-rose-600");
+    // document.getElementById(ERC20_CARD).classList.add("bg-grey");
     setContract_details_open("ERC721");
   }
 
@@ -73,6 +73,17 @@ const State = ({ children }) => {
       nftBaseUri,
       nftfeauters,
       nftChains
+    );
+  }
+
+  function ERC20Submit(){
+    console.log(
+      tokenName,
+      tokenSymbol,
+      tokenSupply,
+      tokenDecimals,
+      tokenfeauters,
+      tokenChains
     );
   }
 
@@ -107,6 +118,7 @@ const State = ({ children }) => {
         tokenChains,
         setTokenChains,
         NFTSubmit,
+        ERC20Submit
       }}
     >
       {children}
