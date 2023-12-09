@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.container {
+  width: 250px;
+  height: 38px;
+  margin: 100px auto;
+}
+.checkbox {
+  display: none;
+}
+
+.mintable,
+.burnable,
+.pausable,
+.upgradable,
+.ethsep,
+.polmum,
+.bsctst,
+.arbgor {
+  margin: 4px;
+  background-color: #ffffff;
+  outline: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.check_boxb input:checked + .burnable,
+.check_boxp input:checked + .pausable,
+.check_boxm input:checked + .mintable,
+.check_boxsep input:checked + .ethsep,
+.check_boxmum input:checked + .polmum,
+.check_boxbsc input:checked + .bsctst,
+.check_boxarb input:checked + .arbgor,
+.check_boxu input:checked + .upgradable {
+  background-color: #0077ff;
+  transition: 0.1s;
+}
