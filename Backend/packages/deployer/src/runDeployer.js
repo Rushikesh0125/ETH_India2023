@@ -74,22 +74,20 @@ const runDeployer = async (clientData) => {
     };
     let deployedAddressArray = [];
     let seed = 1;
-    for (let i = 0; i < chainsToBeDeployedOn.length; i++) {
-        const provider = new ethers_1.ethers.providers.JsonRpcProvider((0, getProviderURL_1.getProviderURLs)(chainsToBeDeployedOn[i]));
-        const signer = provider.getSigner();
-        let constructorArguments = await (0, getReqArgs_1.getReqArgs)(contractName, chainsToBeDeployedOn[i], data, [chainsToBeDeployedOn[i], seed, chainsToBeDeployedOn.length]);
-        seed++;
-        //const { abi, bytecode } = await hre.artifacts.readArtifact(contractName);
-        const contractToDeployFactory = new ethers_1.ethers.ContractFactory((0, getABI_1.getABI)(contractName).abi, (0, getABI_1.getABI)(contractName).bytecode, signer);
-        const salt = ethers_1.ethers.utils.hexZeroPad((0, utils_1.toUtf8Bytes)("100"), 32);
-        const abiCoder = ethers_1.ethers.utils.defaultAbiCoder;
-        const creationCode = ethers_1.ethers.utils.solidityPack(["bytes", "bytes"], [
-            contractToDeployFactory.bytecode,
-            abiCoder.encode(argType(), constructorArguments),
-        ]);
-        const deployedAddress = await instance.callStatic.deploy(creationCode, salt);
-        deployedAddressArray[i] = deployedAddress;
-    }
+    const provider = new ethers_1.ethers.providers.JsonRpcProvider((0, getProviderURL_1.getProviderURLs)("sepolia"));
+    const signer = provider.getSigner();
+    let constructorArguments = await (0, getReqArgs_1.getReqArgs)(contractName, "sepolia", data, ["sepolia", seed, chainsToBeDeployedOn.length]);
+    seed++;
+    //const { abi, bytecode } = await hre.artifacts.readArtifact(contractName);
+    const contractToDeployFactory = new ethers_1.ethers.ContractFactory((0, getABI_1.getABI)(contractName).abi, (0, getABI_1.getABI)(contractName).bytecode, signer);
+    const salt = ethers_1.ethers.utils.hexZeroPad((0, utils_1.toUtf8Bytes)("100"), 32);
+    const abiCoder = ethers_1.ethers.utils.defaultAbiCoder;
+    const creationCode = ethers_1.ethers.utils.solidityPack(["bytes", "bytes"], [
+        contractToDeployFactory.bytecode,
+        abiCoder.encode(argType(), constructorArguments),
+    ]);
+    const deployedAddress = await instance.callStatic.deploy(creationCode, salt);
+    deployedAddressArray[0] = deployedAddress;
     return deployedAddressArray;
 };
 exports.runDeployer = runDeployer;

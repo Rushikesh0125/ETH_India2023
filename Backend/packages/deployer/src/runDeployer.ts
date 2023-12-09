@@ -80,47 +80,42 @@ export const runDeployer = async (clientData: FormData) => {
 
   let seed = 1;
 
-  for (let i = 0; i < chainsToBeDeployedOn.length; i++) {
-    const provider = new ethers.providers.JsonRpcProvider(
-      getProviderURLs(chainsToBeDeployedOn[i])
-    );
-    const signer = provider.getSigner();
+  const provider = new ethers.providers.JsonRpcProvider(
+    getProviderURLs("sepolia")
+  );
+  const signer = provider.getSigner();
 
-    let constructorArguments: readonly any[] = await getReqArgs(
-      contractName,
-      chainsToBeDeployedOn[i],
-      data,
-      [chainsToBeDeployedOn[i], seed, chainsToBeDeployedOn.length]
-    );
-    seed++;
+  let constructorArguments: readonly any[] = await getReqArgs(
+    contractName,
+    "sepolia",
+    data,
+    ["sepolia", seed, chainsToBeDeployedOn.length]
+  );
+  seed++;
 
-    //const { abi, bytecode } = await hre.artifacts.readArtifact(contractName);
+  //const { abi, bytecode } = await hre.artifacts.readArtifact(contractName);
 
-    const contractToDeployFactory = new ethers.ContractFactory(
-      getABI(contractName).abi,
-      getABI(contractName).bytecode,
-      signer
-    );
+  const contractToDeployFactory = new ethers.ContractFactory(
+    getABI(contractName).abi,
+    getABI(contractName).bytecode,
+    signer
+  );
 
-    const salt = ethers.utils.hexZeroPad(toUtf8Bytes("100"), 32);
+  const salt = ethers.utils.hexZeroPad(toUtf8Bytes("100"), 32);
 
-    const abiCoder = ethers.utils.defaultAbiCoder;
+  const abiCoder = ethers.utils.defaultAbiCoder;
 
-    const creationCode = ethers.utils.solidityPack(
-      ["bytes", "bytes"],
-      [
-        contractToDeployFactory.bytecode,
-        abiCoder.encode(argType(), constructorArguments),
-      ]
-    );
+  const creationCode = ethers.utils.solidityPack(
+    ["bytes", "bytes"],
+    [
+      contractToDeployFactory.bytecode,
+      abiCoder.encode(argType(), constructorArguments),
+    ]
+  );
 
-    const deployedAddress = await instance.callStatic.deploy(
-      creationCode,
-      salt
-    );
+  const deployedAddress = await instance.callStatic.deploy(creationCode, salt);
 
-    deployedAddressArray[i] = deployedAddress;
-  }
+  deployedAddressArray[0] = deployedAddress;
 
   return deployedAddressArray;
 };
