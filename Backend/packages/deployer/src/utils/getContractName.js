@@ -1,56 +1,56 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getContractName = void 0;
-var getContractName = function (Type, protocol, clientData) {
+const getContractName = (Type, protocol, clientData) => {
     if (Type == "ERC20") {
         if (clientData.tokenFetures.mintable && clientData.tokenFetures.burnable) {
             if (protocol == "zetachain") {
-                return "CrossChainTokenZ.sol";
+                return "CrossChainTokenZ";
             }
             else {
-                return "CrossChainToken.sol";
+                return "CrossChainToken";
             }
         }
         else if (clientData.tokenFetures.burnable) {
             if (protocol == "zetachain") {
-                return "CrossChainTokenBurnableZ.sol";
+                return "CrossChainTokenBurnableZ";
             }
             else {
-                return "CrossChainTokenBurnable.sol";
+                return "CrossChainTokenBurnable";
             }
         }
         else if (clientData.tokenFetures.mintable) {
             if (protocol == "zetachain") {
-                return "CrossChainTokenMintableZ.sol";
+                return "CrossChainTokenMintableZ";
             }
             else {
-                return "CrossChainTokenMintable.sol";
+                return "CrossChainTokenMintable";
             }
         }
     }
     else if (Type == "ERC721") {
         if (clientData.tokenFetures.mintable && clientData.tokenFetures.burnable) {
             if (protocol == "zetachain") {
-                return "CrossChainNFTZ.sol";
+                return "CrossChainNFTZ";
             }
             else {
-                return "CrossChainNFT.sol";
+                return "CrossChainNFT";
             }
         }
         else if (clientData.tokenFetures.burnable) {
             if (protocol == "zetachain") {
-                return "CrossChainNFTBurnableZ.sol";
+                return "CrossChainNFTBurnableZ";
             }
             else {
-                return "CrossChainNFTBurnable.sol";
+                return "CrossChainNFTBurnable";
             }
         }
         else if (clientData.tokenFetures.mintable) {
             if (protocol == "zetachain") {
-                return "CrossChainNFTMintableZ.sol";
+                return "CrossChainNFTMintableZ";
             }
             else {
-                return "CrossChainNFTMintable.sol";
+                return "CrossChainNFTMintable";
             }
         }
     }

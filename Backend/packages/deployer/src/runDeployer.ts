@@ -8,13 +8,14 @@ import { InputTypes } from "./types/inputTypes";
 import { FormData } from "./types/FormData";
 import { ABI } from "./ABI/Create3ABI";
 import { getABI } from "./utils/getABI";
+import { getProviderURLs } from "./utils/getProviderURL";
 
 export const runDeployer = async (clientData: FormData) => {
   const protocolType =
     clientData.supportedChain == "zetachain" ? "zetachain" : "CCIP";
 
   const data: UserArgsType = {
-    minter: "",
+    minter: "0x65bFE037d16189142D2BcC288a6Db3e6e27F6408",
     name: clientData.tokenName,
     symbol: clientData.tokenSymbol,
     uri: clientData.uri,
@@ -80,6 +81,11 @@ export const runDeployer = async (clientData: FormData) => {
   let seed = 1;
 
   for (let i = 0; i < chainsToBeDeployedOn.length; i++) {
+    const provider = new ethers.providers.JsonRpcProvider(
+      getProviderURLs(chainsToBeDeployedOn[i])
+    );
+    const signer = provider.getSigner();
+
     let constructorArguments: readonly any[] = await getReqArgs(
       contractName,
       chainsToBeDeployedOn[i],
@@ -91,8 +97,9 @@ export const runDeployer = async (clientData: FormData) => {
     //const { abi, bytecode } = await hre.artifacts.readArtifact(contractName);
 
     const contractToDeployFactory = new ethers.ContractFactory(
-      contractName,
-      getABI(contractName)
+      getABI(contractName).abi,
+      getABI(contractName).bytecode,
+      signer
     );
 
     const salt = ethers.utils.hexZeroPad(toUtf8Bytes("100"), 32);

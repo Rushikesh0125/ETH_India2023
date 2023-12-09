@@ -29,4 +29,8 @@ const tryDeployer = async () => {
   return deployedAddress;
 };
 
-console.log(tryDeployer());
+if (require.main === module) {
+  tryDeployer().catch((err) => {
+    console.error("error in receipt gen", err);
+  });
+}

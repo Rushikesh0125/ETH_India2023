@@ -45,9 +45,9 @@ export const getReqArgs = async (
     }
   } else if (contractName.includes("Token")) {
     if (contractName.includes("NoRoles")) {
-      args = [...intialArgs, userArgs.minter, userArgs.name, userArgs.symbol];
-    } else {
       args = [...intialArgs, userArgs.name, userArgs.symbol];
+    } else {
+      args = [...intialArgs, userArgs.minter, userArgs.name, userArgs.symbol];
     }
   }
   return args;

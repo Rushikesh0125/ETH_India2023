@@ -1,7 +1,9 @@
 import * as fs from "node:fs";
+import * as path from "path";
 
 type fileType = {
   abi: any[];
+  bytecode: any;
 };
 
 export const getABI = (contractName: string) => {
@@ -10,13 +12,17 @@ export const getABI = (contractName: string) => {
   const proto =
     contractName.charAt(contractName.length - 1) == "Z" ? "Zetachain" : "CCIP";
 
-  const path = `../../artifacts/contracts/${dir}/${proto}/${contractName}.sol/${contractName}.json`;
-  const dirToRead = fs.readdirSync("../../artifacts/contracts");
+  const filePath = path.join(
+    __dirname,
+    "../../artifacts/contracts",
+    dir,
+    proto,
+    `${contractName}.sol`,
+    `${contractName}.json`
+  );
 
-  const file = fs.readFileSync(path);
-  console.log("file", JSON.parse(file.toString()));
-
-  return path;
+  //const path = require(`../../artifacts/contracts/${dir}/${proto}/${contractName}.sol/${contractName}.json`);
+  const file = fs.readFileSync(filePath);
+  const data = JSON.parse(file.toString()) as fileType;
+  return data;
 };
-
-console.log(getABI("CrossChainNFT"));
