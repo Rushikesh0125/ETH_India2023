@@ -18,7 +18,20 @@ export const getContractArgs = async (
     contractName == "CrossChainNFTMintable" ||
     contractName == "CrossChainNFTNoRoles"
   ) {
-    args[1] = constants?.router;
+    args[0] = constants?.router;
+  } else if (
+    contractName == "CrossChainTokenZ" ||
+    contractName == "CrossChainTokenBurnableZ" ||
+    contractName == "CrossChainTokenMintableZ" ||
+    contractName == "CrossChainTokenNoRolesZ" ||
+    contractName == "CrossChainNFTZ" ||
+    contractName == "CrossChainNFTBurnableZ" ||
+    contractName == "CrossChainNFTMintableZ" ||
+    contractName == "CrossChainNFTNoRolesZ"
+  ) {
+    args[0] = constants?.connectorAddress;
+    args[1] = constants?.zetaConsumerAddress;
+    args[2] = constants?.zetaTokenAddress;
   }
   return args;
 };
