@@ -1,5 +1,10 @@
 import * as cors from "cors";
 import * as express from "express";
+const dotenv = require("dotenv");
+
+dotenv.config();
+
+console.log("yo",process.env.GOERLI_URL);
 
 import { type FormData } from "../deployer/src/types/FormData";
 import { runDeployer } from "../deployer/src/runDeployer";
