@@ -5,3 +5,8 @@
 body ::-webkit-scrollbar {
   scroll-behavior: smooth;
 }
+
+@font-face {
+  font-family: "LomoCopyLTStd-Medium.";
+  src: url("../src/assets/fonts/LomoCopyLTStd-Medium.woff")  
+}

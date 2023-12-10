@@ -27,7 +27,7 @@
   border-radius: 8px;
   font-size: 16px;
 }
-
+ 
 .check_boxb input:checked + .burnable,
 .check_boxp input:checked + .pausable,
 .check_boxm input:checked + .mintable,
@@ -36,6 +36,6 @@
 .check_boxbsc input:checked + .bsctst,
 .check_boxarb input:checked + .arbgor,
 .check_boxu input:checked + .upgradable {
-  background-color: #0077ff;
+  background-color: #f87171;
   transition: 0.1s;
 }

@@ -10,8 +10,23 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@safe-global/auth-kit": "^2.0.0",
+    "@safe-global/protocol-kit": "^2.0.0",
+    "@safe-global/safe-react-components": "^2.0.6",
+    "@tanstack/react-query": "^4.36.1",
+    "@urql/core": "^4.2.0",
+    "clsx": "^2.0.0",
+    "ethers": "^6.9.0",
+    "graphql": "^16.8.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-google-button": "^0.7.2",
+    "react-hot-toast": "^2.4.1",
+    "react-router-dom": "^6.20.1",
+    "urql": "^3.0.4",
+    "viem": "^1.19.11",
+    "vite-plugin-node-polyfills": "^0.17.0",
+    "wagmi": "^1.4.10"
   },
   "devDependencies": {
     "@types/react": "^18.2.37",

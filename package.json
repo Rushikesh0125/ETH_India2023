@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@zetachain/protocol-contracts": "^3.0.1"
+  }
+}
