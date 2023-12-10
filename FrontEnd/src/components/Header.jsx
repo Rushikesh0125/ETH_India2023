@@ -1,8 +1,8 @@
-import imgUrl from "../assets/ketchuplogo.png";
-
+// import imgUrl from "../assets/ketchuplogo.png";
+import imgUrl2 from "../assets/ketchuplogo (1).png";
 const Header = () => {
   return (
-    <div className="p-10 sm:p-20 lg:p-40 font-sans bg-[#efadaf]   flex flex-col md:flex-row h-max w-full items-center justify-between ">
+    <div className="p-10 sm:p-20 lg:p-40 font-sans bg-[#efadaf]   flex flex-col md:flex-row h-max w-full items-center justify-between gap-8 md:gap-4">
       <div className="flex flex-col">
         <h1 className="text-8xl pb-[10px] font-exo">ketchup sdk</h1>
         <p className="text-[20px]">DIY multi-chain dApps for dummies!</p>
@@ -16,7 +16,7 @@ const Header = () => {
         </button>
       </div>
 
-      <img src={imgUrl} className="w-[80vh] h-[80vh" />
+      <img src={imgUrl2} className="w-auto h-[70vh]" />
     </div>
   );
 };
