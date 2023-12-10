@@ -116,7 +116,7 @@ const ERC721_details = () => {
             value={formdetails.nftName}
             onChange={handleFormChange}
             placeholder="BUDS Token"
-            className="rounded-[10px] outline-none p-[8px] text-[17px] text-semibold border-[2px] border-blue-700"
+            className="rounded-[10px] outline-none p-[8px] text-[17px] text-semibold border-[2px] border-red-700"
           />
         </div>
         <div className="flex flex-col gap-[10px]">
@@ -130,7 +130,7 @@ const ERC721_details = () => {
             value={formdetails.nftSymbol}
             onChange={handleFormChange}
             placeholder="BUDS"
-            className="rounded-[10px] outline-none p-[8px] text-[17px] text-semibold border-[2px] border-blue-700"
+            className="rounded-[10px] outline-none p-[8px] text-[17px] text-semibold border-[2px] border-red-700"
           />
         </div>
 
@@ -147,7 +147,7 @@ const ERC721_details = () => {
             value={formdetails.nftSupply}
             onChange={handleFormChange}
             placeholder="100000"
-            className="rounded-[10px] outline-none p-[8px] text-[17px] text-semibold border-[2px] border-blue-700"
+            className="rounded-[10px] outline-none p-[8px] text-[17px] text-semibold border-[2px] border-red-700"
           />
         </div>
         <div className="flex flex-col gap-[10px]">
@@ -161,7 +161,7 @@ const ERC721_details = () => {
             value={formdetails.nftBaseUri}
             onChange={handleFormChange}
             placeholder="ipfs://.."
-            className="rounded-[10px] outline-none p-[8px] text-[17px] text-semibold border-[2px] border-blue-700"
+            className="rounded-[10px] outline-none p-[8px] text-[17px] text-semibold border-[2px] border-red-700"
           />
         </div>
       </div>

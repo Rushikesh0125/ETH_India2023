@@ -5,6 +5,10 @@ export const Context = createContext();
 
 const State = ({ children }) => {
   // NFT DETAILS
+  /**
+   * 
+   */
+  const [safeAuthResp, setSafeAuthResp] = useState(null);
   const [nftName, setNftName] = useState("");
   const [nftSymbol, setNftSymbol] = useState("");
   const [nftSupply, setNftSupply] = useState(0);
@@ -118,7 +122,9 @@ const State = ({ children }) => {
         tokenChains,
         setTokenChains,
         NFTSubmit,
-        ERC20Submit
+        ERC20Submit,
+        safeAuthResp,
+        setSafeAuthResp
       }}
     >
       {children}

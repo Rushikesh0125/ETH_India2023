@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { BrowserProvider, ethers } from "ethers";
+import { useContext, useEffect, useState } from "react";
+import { ethers } from "ethers";
 import { EthHashInfo } from "@safe-global/safe-react-components";
 import Safe, { EthersAdapter } from "@safe-global/protocol-kit";
 // import AppBar from './AppBar'
@@ -10,6 +10,9 @@ import {
   SafeAuthUserInfo,
 } from "@safe-global/auth-kit";
 import Button from "./Button";
+import { Context } from "../context/Context";
+import GoogleButton from "react-google-button";
+
 // import { getSafeTxV4TypedData, getTypedData, getV3TypedData } from './typedData'
 
 function SafeAuth() {
@@ -17,7 +20,8 @@ function SafeAuth() {
   const [isAuthenticated, setIsAuthenticated] = useState(
     !!safeAuthPack?.isAuthenticated
   );
-  const [safeAuthSignInResponse, setSafeAuthSignInResponse] = useState(null);
+  const { safeAuthResp, setSafeAuthResp } = useContext(Context);
+  // const [safeAuthSignInResponse, setSafeAuthSignInResponse] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
   const [chainId, setChainId] = useState();
   const [balance, setBalance] = useState();
@@ -59,7 +63,7 @@ function SafeAuth() {
         if (authPack.isAuthenticated) {
           const signInInfo = await authPack?.signIn();
 
-          setSafeAuthSignInResponse(signInInfo);
+          setSafeAuthResp(signInInfo);
           setIsAuthenticated(true);
         }
       });
@@ -95,14 +99,14 @@ function SafeAuth() {
   const login = async (provider) => {
     const signInInfo = await safeAuthPack?.signIn({ loginProvider: provider });
 
-    setSafeAuthSignInResponse(signInInfo);
+    setSafeAuthResp(signInInfo);
     setIsAuthenticated(true);
   };
 
   const logout = async () => {
     await safeAuthPack?.signOut();
 
-    setSafeAuthSignInResponse(null);
+    setSafeAuthResp(null);
   };
 
   const getUserInfo = async () => {
@@ -124,7 +128,7 @@ function SafeAuth() {
   };
 
   const signAndExecuteSafeTx = async (index) => {
-    const safeAddress = safeAuthSignInResponse?.safes?.[index] || "0x";
+    const safeAddress = safeAuthResp?.safes?.[index] || "0x";
 
     // Wrap Web3Auth provider with ethers
     const provider = new BrowserProvider(safeAuthPack?.getProvider());
@@ -142,12 +146,12 @@ function SafeAuth() {
     let tx = await protocolKit.createTransaction({
       transactions: [
         {
-          to: ethers.getAddress(safeAuthSignInResponse?.eoa || "0x"),
+          to: ethers.getAddress(safeAuthResp?.eoa || "0x"),
           data: "0x",
           value: ethers.parseUnits("0.0001", "ether").toString(),
         },
       ],
-    }); 
+    });
 
     // Sign transaction. Not necessary to execute the transaction if the threshold is one
     // but kept to test the sign transaction modal
@@ -163,7 +167,7 @@ function SafeAuth() {
 
     const params = {
       data,
-      from: safeAuthSignInResponse?.eoa,
+      from: safeAuthResp?.eoa,
     };
 
     if (method === "eth_signTypedData") {
@@ -186,8 +190,8 @@ function SafeAuth() {
   const sendTransaction = async () => {
     const tx = await provider?.send("eth_sendTransaction", [
       {
-        from: safeAuthSignInResponse?.eoa,
-        to: safeAuthSignInResponse?.eoa,
+        from: safeAuthResp?.eoa,
+        to: safeAuthResp?.eoa,
         value: ethers.parseUnits("0.00001", "ether").toString(),
         gasLimit: 21000,
       },
@@ -231,18 +235,27 @@ function SafeAuth() {
     );
   };
 
-  console.log("safeAuthSignInResponse", safeAuthSignInResponse);
+  console.log("safeAuthSignInResponse", safeAuthResp);
   return (
     <>
-      <div>
-        <h1>Safe Auth</h1>
+      <div className="p-4">
+        {/* <h1>Safe Auth</h1> */}
         <div className="flex flex-col gap-4 items-center">
-          <Button onClick={() => login("google")}>
+          <GoogleButton onClick={() => login("google")} />
+          {/* <Button onClick={() => login("google")}>
             login with safeauth - google
-          </Button>
-          <Button onClick={() => login("google")}>
+          </Button> */}
+
+          {safeAuthResp ? (
+            <p className="p-2 bg-yellow-100 px-6 rounded-xl font-bold">
+              {safeAuthResp ? JSON.stringify(safeAuthResp, null, 2) : null}
+            </p>
+          ) : (
+            null
+          )}
+          {/* <Button onClick={() => login("google")}>
             login with safeauth - github
-          </Button>
+          </Button> */}
         </div>
       </div>
       {/* <AppBar

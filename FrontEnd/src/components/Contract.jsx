@@ -1,7 +1,9 @@
 // cc: https://github.com/Rushikesh0125/snb-sdk/commit/196785fc32f3db65ccdb6c719fba80505121a1a8
 
 import { useQuery } from "@tanstack/react-query";
+// import { useContext } from "react";
 import { createClient } from "urql";
+// import { Context } from "../context/Context";
 
 const userAddress = "0x9d97cf3ac20b73c81d8a5233d9fbe09618d4f8bd";
 const goerli_query_url =
@@ -31,6 +33,10 @@ const mumbai_client = createClient({
 });
 
 const Contract = () => {
+
+  // const {safeAuthResp } = useContext(Context);
+
+  // const userAddress = safeAuthResp?.eoa || "";
   const goerli = useQuery({
     queryKey: ["goerli"],
     queryFn: () => goerli_client.query(query).toPromise(),
@@ -100,11 +106,11 @@ const Contract = () => {
   return (
     <main className="bg-green-400 h-screen">
       <div className="m-20 overflow-hidden">
-        <table className="w-full max-h-screen overflow-y-scroll bg-green-400 text-sm text-left rtl:text-right text-gray-500 ">
+        <table className="w-full max-h-screen overflow-y-scroll bg-rose-600 text-sm text-left rtl:text-right text-gray-500 ">
           <caption className="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white  ">
             Contracts deployed by the user
           </caption>
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
+          <thead className="text-xs text-gray-700 uppercase">
             <tr>
               <th scope="col" className="px-6 py-3">
                 Contract Address

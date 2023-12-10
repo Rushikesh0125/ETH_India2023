@@ -1,6 +1,9 @@
-import { useReducer } from "react";
+import { useContext, useReducer } from "react";
 import Button from "./Button";
 import { ERC20 } from "../utils";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import { Context } from "../context/Context";
 
 const initialFormState = {
   tokenName: "",
@@ -25,13 +28,46 @@ const initialFormState = {
 //   arbgoerli: false,
 //   bsc: false,
 // },
+
+const API_URL = import.meta.env.VITE_BACKEND_API_URL;
 const ERC20_details = (props) => {
   const type = props.type;
+
+  const {safeAuthResp,
+     } = useContext(Context);
 
   const [formdetails, setFormDetails] = useReducer(
     (state, newState) => ({ ...state, ...newState }),
     { ...initialFormState, type }
   );
+
+  const contractDeployMutation = useMutation({
+    mutationKey: ["contractDeploy"],
+    /**
+     *
+     * @param {string} data
+     * @returns {Promise<{message: string}>}
+     */
+    mutationFn: async (data) => {
+      const fetchedData = await fetch(`${API_URL}/deploy`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      return await fetchedData.json();
+    },
+    onSuccess: (data) => {
+      toast.success(data.message, {duration: 10000});
+    },
+    onError: (error) => {
+      toast.error(error.message, {duration: 5000});
+    },
+  });
+
+  // console.log("contractDeployMutation", contractDeployMutation.data);
 
   const handleFormChange = (e) => {
     if (e.target.type === "checkbox") {
@@ -69,22 +105,25 @@ const ERC20_details = (props) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log(type);
+
     if (type === ERC20) {
-      console.log("yes");
+      // console.log("yes");
       delete formdetails.uri;
-      console.log("no", formdetails);
+      // console.log("no", formdetails);
     } else {
       delete formdetails.tokenDecimals;
     }
-    console.log(formdetails);
+    contractDeployMutation.mutate({
+      ...formdetails,
+      minter: safeAuthResp.eoa,
+    });
   };
 
   if (!type) return null;
   return (
     <form
       onSubmit={onSubmit}
-      className="bg-gray-300 flex flex-col gap-[20px] p-[30px]"
+      className="bg-gray-200 mb-4 rounded-2xl flex flex-col gap-[20px] p-[30px]"
     >
       <h1 className="p-[30px] py-[0px] font-semibold text-[23px]">
         Enter Token details
@@ -101,7 +140,7 @@ const ERC20_details = (props) => {
             type="text"
             id="tokenName"
             placeholder="BUDS Token"
-            className="rounded-[10px] outline-none p-[8px] text-[17px] text-semibold border-[2px] border-blue-700"
+            className="rounded-[10px] outline-none p-[8px] text-[17px] text-semibold border-[2px] border-red-700"
           />
         </div>
         <div className="flex flex-col gap-[10px]">
@@ -115,7 +154,7 @@ const ERC20_details = (props) => {
             type="text"
             id="tokenSymbol"
             placeholder="BUDS"
-            className="rounded-[10px] outline-none p-[8px] text-[17px] text-semibold border-[2px] border-blue-700"
+            className="rounded-[10px] outline-none p-[8px] text-[17px] text-semibold border-[2px] border-red-700"
           />
         </div>
         <div className="flex flex-col gap-[10px]">
@@ -130,15 +169,12 @@ const ERC20_details = (props) => {
             id="tokenSupply"
             min="0"
             placeholder="100000"
-            className="rounded-[10px] outline-none p-[8px] text-[17px] text-semibold border-[2px] border-blue-700"
+            className="rounded-[10px] outline-none p-[8px] text-[17px] text-semibold border-[2px] border-red-700"
           />
         </div>
         {type === ERC20 ? (
           <div className="flex flex-col gap-[10px]">
-            <label
-               
-              className="font-semibold text-[16px]"
-            >
+            <label className="font-semibold text-[16px]">
               Enter token decimals
             </label>
             <input
@@ -149,7 +185,7 @@ const ERC20_details = (props) => {
               id="tokenDecimals"
               min="1"
               placeholder="18"
-              className="rounded-[10px] outline-none p-[8px] text-[17px] text-semibold border-[2px] border-blue-700"
+              className="rounded-[10px] outline-none p-[8px] text-[17px] text-semibold border-[2px] border-red-700"
             />
           </div>
         ) : (
@@ -162,7 +198,7 @@ const ERC20_details = (props) => {
               value={formdetails.uri}
               onChange={handleFormChange}
               placeholder="ipfs://.."
-              className="rounded-[10px] outline-none p-[8px] text-[17px] text-semibold border-[2px] border-blue-700"
+              className="rounded-[10px] outline-none p-[8px] text-[17px] text-semibold border-[2px] border-red-700"
             />
           </div>
         )}
@@ -372,7 +408,9 @@ const ERC20_details = (props) => {
           <option value="lz">Layer 0</option>
         </select>
       </div> */}
-      <Button type="submit">Deploy</Button>
+      <Button className="disabled:bg-gray-500" disabled={contractDeployMutation.isLoading} loading={contractDeployMutation.isLoading} type="submit">
+        Deploy
+      </Button>
     </form>
   );
 };

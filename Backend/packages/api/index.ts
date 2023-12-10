@@ -4,8 +4,6 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-console.log("yo",process.env.GOERLI_URL);
-
 import { type FormData } from "../deployer/src/types/FormData";
 import { runDeployer } from "../deployer/src/runDeployer";
 
@@ -16,13 +14,19 @@ app.use(express.json());
 app.use(cors());
 
 app.post("/deploy", async (req, res) => {
-  const body = req.body as FormData;
+  const body = req.body as string;
+
   try {
-    await runDeployer(body);
-    return res.status(200).json({ message: "Deployed successfully" });
+    const parsedBody = JSON.parse(JSON.stringify(body)) as FormData;
+
+    if (!parsedBody || Object.keys(parsedBody).length === 0) {
+      return res.status(400).json({ message: "Invalid body" });
+    }
+    await runDeployer(parsedBody);
+    return res.status(200).send({ message: "Deployed successfully" });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Something went wrong" });
+    return res.status(500).send({ message: "Something went wrong" });
   }
 });
 
